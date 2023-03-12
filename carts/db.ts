@@ -27,36 +27,52 @@ const connection = async () => {
 const generateCartId = () => uuidv4();
 
 const createNewCart = async ():Promise<Cart> => {
-  const newCart:Cart = {
-    cartId: generateCartId(),
-    products: [],
-    totalNumberOfItems: 0,
-    totalPrice: 0,
-  };
-  const client = await connection();
-  await client.insertOne(newCart);
-  await client.close;
-  return newCart;
+  try {
+    const newCart:Cart = {
+      cartId: generateCartId(),
+      products: [],
+      totalNumberOfItems: 0,
+      totalPrice: 0,
+    };
+    const client = await connection();
+    await client.insertOne(newCart);
+    await client.close;
+    return newCart;
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const getCartById = async id => {
-  const client = await connection();
-  const data = await client.findOne({ cartId: id });
-  await client.close;
-  return data;
+  try {
+    const client = await connection();
+    const data = await client.findOne({ cartId: id });
+    await client.close;
+    return data;
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const updateCart = async (cart: Cart) => {
-  const client = await connection();
-  await client.updateOne({ cartId: cart.cartId }, { $set: cart });
-  await client.close;
-  return cart;
+  try {
+    const client = await connection();
+    await client.updateOne({ cartId: cart.cartId }, { $set: cart });
+    await client.close;
+    return cart;
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const deleteCart = async cartId => {
-  const client = await connection();
-  await client.deleteOne({ cartId });
-  await client.close;
+  try {
+    const client = await connection();
+    await client.deleteOne({ cartId });
+    await client.close;
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 export default {

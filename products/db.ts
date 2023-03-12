@@ -17,32 +17,37 @@ dotenv.config();
 */
 const postgresUser = process.env.POSTGRES_USER;
 const postgresPassword = process.env.POSTGRES_PASSWORD;
+const postgresDatabase = process.env.POSTGRES_DATABASE;
 const QUERY = 'SELECT product_id, product_name, product_price FROM salt_products WHERE product_id = $1';
 
 const pool = new Pool({
   host: 'localhost',
   port: 5432,
-  database: 'postgres',
+  database: postgresDatabase,
   user: postgresUser,
   password: postgresPassword,
 });
 
 const getProduct = async (productId: string):Promise<Product> => {
-  const client = await pool.connect();
-  const res = await client.query(QUERY, [productId]);
-  if (res.rowCount !== 1) {
-    throw new Error(`More than one product found for ${productId}`);
+  try {
+    const client = await pool.connect();
+    const res = await client.query(QUERY, [productId]);
+    if (res.rowCount !== 1) {
+      throw new Error(`More than one product found for ${productId}`);
+    }
+    const data = await res.rows[0];
+
+    const product: Product = {
+      productId: data.product_id,
+      name: data.product_name,
+      price: data.product_price,
+    };
+
+    client.release();
+    return product;
+  } catch (error) {
+    throw new Error(error);
   }
-  const data = await res.rows[0];
-
-  const product: Product = {
-    productId: data.product_id,
-    name: data.product_name,
-    price: data.product_price,
-  };
-
-  client.release();
-  return product;
 };
 
 export default getProduct;

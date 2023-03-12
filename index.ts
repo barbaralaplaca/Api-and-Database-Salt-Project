@@ -39,6 +39,8 @@ const checkQuantity = (req, res, next) => {
   } return next();
 };
 
+const middleware = [checkCart, checkBody, checkQuantity];
+
 // Write your enpoints here
 
 app.route('/api/carts')
@@ -85,7 +87,7 @@ app.route('/api/carts/:cartId')
     }
   });
 
-app.post('/api/carts/:cartId/products/', checkCart, checkBody, checkQuantity, async (req, res) => {
+app.post('/api/carts/:cartId/products/', middleware, async (req, res) => {
   try {
     const { cartId } = req.params;
     const { productId } = req.body;
