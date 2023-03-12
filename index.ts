@@ -93,15 +93,20 @@ app.post('/api/carts/:cartId/products/', checkCart, checkBody, checkQuantity, as
 
     const gettingCart = await getCart(cartId);
     const gettingProduct = await getProductById(productId);
+    if (gettingProduct === null) {
+      return res
+        .status(404)
+        .send({ message: 'product does not exist in the database' });
+    }
     const productForCart: ProductForCart = { ...gettingProduct, quantity };
     const cart = await addProductToCart(productForCart, gettingCart);
 
-    res
+    return res
       .set('location', `/api/carts/${cart.cartId}/products`)
       .status(201)
       .json(cart);
   } catch (error) {
-    res.status(500).send('trying to udnerstand error');
+    res.status(400).send({ message: 'product not found in the database' });
   }
 });
 

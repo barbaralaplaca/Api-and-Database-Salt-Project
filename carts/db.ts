@@ -39,7 +39,6 @@ const createNewCart = async ():Promise<Cart> => {
   return newCart;
 };
 
-// funciona
 const getCartById = async id => {
   const client = await connection();
   const data = await client.findOne({ cartId: id });

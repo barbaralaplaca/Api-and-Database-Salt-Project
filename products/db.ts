@@ -2,7 +2,7 @@
 
 import { Pool } from 'pg';
 import * as dotenv from 'dotenv';
-import { PostgresProduct, Product } from '../types';
+import { Product } from '../types';
 
 dotenv.config();
 
