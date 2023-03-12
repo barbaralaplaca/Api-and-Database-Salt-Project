@@ -28,7 +28,7 @@ const addProductToCart = async (product:ProductForCart, cart: Cart) => {
     const updatedProduct = {
       ...checkProduct,
       quantity: Number(checkProduct.quantity) + Number(product.quantity),
-      price: Number((checkProduct.price + productTotalPrice).toFixed(2)),
+      price: Number((Number(checkProduct.price) + Number(productTotalPrice)).toFixed(2)),
     };
     updatedProductsList.splice(productInd, 1, updatedProduct);
     const data = await db.updateCart(updatedCart);

@@ -93,15 +93,20 @@ app.post('/api/carts/:cartId/products/', checkCart, checkBody, checkQuantity, as
 
     const gettingCart = await getCart(cartId);
     const gettingProduct = await getProductById(productId);
+    if (gettingProduct === null) {
+      return res
+        .status(400)
+        .send({ message: 'product not found in the database' });
+    }
     const productForCart: ProductForCart = { ...gettingProduct, quantity };
     const cart = await addProductToCart(productForCart, gettingCart);
-    res
+    return res
       .set('location', `/api/carts/${cart.cartId}/products`)
       .status(201)
       .json(cart);
-  } catch (error) {
+  } catch {
     res
-      .status(400)
+      .status(500)
       .send({ message: 'There is an error. We are sorry for the incovenient. We are trying to fix it as soon as possible and we hope to provide you a great user experience' });
   }
 });
