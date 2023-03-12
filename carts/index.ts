@@ -23,7 +23,8 @@ const addProductToCart = async (product:ProductForCart, cart: Cart) => {
       totalNumberOfItems: Number(cart.totalNumberOfItems) + Number(product.quantity),
       totalPrice: cart.totalPrice + productTotalPrice,
     };
-    return db.updateCart(updatedCart);
+    const data = await db.updateCart(updatedCart);
+    return data;
   }
   updatedProductsList.push(product);
   const updatedCart: Cart = {
@@ -32,7 +33,8 @@ const addProductToCart = async (product:ProductForCart, cart: Cart) => {
     totalNumberOfItems: Number(cart.totalNumberOfItems) + Number(product.quantity),
     totalPrice: cart.totalPrice + productTotalPrice,
   };
-  return db.updateCart(updatedCart);
+  const data = await db.updateCart(updatedCart);
+  return data;
 };
 
 const deleteCart = async (cartId: string) => db.deleteCart(cartId);

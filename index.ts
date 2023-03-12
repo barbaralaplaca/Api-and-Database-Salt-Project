@@ -12,7 +12,6 @@ app.use(express.json());
 // Don't change the code above this line!
 
 // MIDDLEWARES
-// - check for quantity > 0
 
 const checkCart = async (req: Request, res: Response, next: any) => {
   const { cartId } = req.params;
@@ -63,15 +62,10 @@ app.route('/api/carts')
   });
 
 app.route('/api/carts/:cartId')
-  .get(async (req, res) => {
+  .get(checkCart, async (req, res) => {
     try {
       const { cartId } = req.params;
       const cart = await getCart(cartId);
-      if (cart === null) {
-        res
-          .status(404)
-          .send({ message: 'cart does not exist' });
-      }
       res
         .status(200)
         .json(cart);
@@ -79,10 +73,10 @@ app.route('/api/carts/:cartId')
       res.status(500).send(error);
     }
   })
-  .delete((req, res) => {
+  .delete(async (req, res) => {
     try {
       const { cartId } = req.params;
-      deleteCart(cartId);
+      await deleteCart(cartId);
       res
         .status(204)
         .send();
@@ -101,7 +95,6 @@ app.post('/api/carts/:cartId/products/', checkCart, checkBody, checkQuantity, as
     const gettingProduct = await getProductById(productId);
     const productForCart: ProductForCart = { ...gettingProduct, quantity };
     const cart = await addProductToCart(productForCart, gettingCart);
-    console.log(cart, 'this is cart in MAIN index.ts');
 
     res
       .set('location', `/api/carts/${cart.cartId}/products`)

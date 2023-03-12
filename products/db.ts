@@ -42,7 +42,6 @@ const getProduct = async (productId: string):Promise<Product> => {
   };
 
   client.release();
-  pool.end();
   return product;
 };
 
