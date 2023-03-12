@@ -28,21 +28,25 @@ const pool = new Pool({
 });
 
 const getProduct = async (productId: string):Promise<Product> => {
-  const client = await pool.connect();
-  const res = await client.query(QUERY, [productId]);
-  if (res.rowCount !== 1) {
-    throw new Error(`More than one product found for ${productId}`);
+  try {
+    const client = await pool.connect();
+    const res = await client.query(QUERY, [productId]);
+    if (res.rowCount !== 1) {
+      throw new Error(`More than one product found for ${productId}`);
+    }
+    const data = await res.rows[0];
+
+    const product: Product = {
+      productId: data.product_id,
+      name: data.product_name,
+      price: data.product_price,
+    };
+
+    client.release();
+    return product;
+  } catch (error) {
+    throw new Error('product not found in the database');
   }
-  const data = await res.rows[0];
-
-  const product: Product = {
-    productId: data.product_id,
-    name: data.product_name,
-    price: data.product_price,
-  };
-
-  client.release();
-  return product;
 };
 
 export default getProduct;

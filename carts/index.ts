@@ -12,33 +12,30 @@ const getCart = async (id:string):Promise<Cart> => {
 };
 
 const addProductToCart = async (product:ProductForCart, cart: Cart) => {
-  const productTotalPrice = product.quantity * product.price;
+  const productTotalPrice = (product.quantity * product.price);
   const updatedProductsList = cart.products;
-  const checkProduct = updatedProductsList.find(item => item.productId === product.productId);
-  if (checkProduct !== undefined) {
-    const productInd = updatedProductsList.findIndex(item => item.productId === product.productId);
-    const updatedProduct = {
-      ...checkProduct,
-      quantity: Number(checkProduct.quantity) + Number(product.quantity),
-      price: Number(checkProduct.price) + Number(productTotalPrice),
-    };
-    updatedProductsList.splice(productInd, 1, updatedProduct);
-    const updatedCart: Cart = {
-      cartId: cart.cartId,
-      products: updatedProductsList,
-      totalNumberOfItems: Number(cart.totalNumberOfItems) + Number(product.quantity),
-      totalPrice: cart.totalPrice + productTotalPrice,
-    };
-    const data = await db.updateCart(updatedCart);
-    return data;
-  }
-  updatedProductsList.push(product);
+
   const updatedCart: Cart = {
     cartId: cart.cartId,
     products: updatedProductsList,
     totalNumberOfItems: Number(cart.totalNumberOfItems) + Number(product.quantity),
-    totalPrice: cart.totalPrice + productTotalPrice,
+    totalPrice: Number((cart.totalPrice + productTotalPrice).toFixed(2)),
   };
+
+  const productInd = updatedProductsList.findIndex(item => item.productId === product.productId);
+  if (productInd !== -1) {
+    const checkProduct = updatedProductsList.find(item => item.productId === product.productId);
+    const updatedProduct = {
+      ...checkProduct,
+      quantity: Number(checkProduct.quantity) + Number(product.quantity),
+      price: Number((checkProduct.price + productTotalPrice).toFixed(2)),
+    };
+    updatedProductsList.splice(productInd, 1, updatedProduct);
+    const data = await db.updateCart(updatedCart);
+    return data;
+  }
+
+  updatedProductsList.push(product);
   const data = await db.updateCart(updatedCart);
   return data;
 };
