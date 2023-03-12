@@ -75,7 +75,7 @@ describe('The Cart API', () => {
     });
   });
 
-  describe('POST /api/carts/:cartId/products', () => {
+  describe.only('POST /api/carts/:cartId/products', () => {
     describe('with an existing empty cart', () => {
       let postProductResponse = null;
       let cart = null;

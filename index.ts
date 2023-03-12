@@ -3,12 +3,19 @@ import {
   createCart, getCart, addProductToCart, deleteCart,
 } from './carts';
 import getProductById from './products';
+import { ProductForCart } from './types';
 
 const app: Application = express();
 const port = 3000;
 app.use(express.json());
 
 // Don't change the code above this line!
+
+// MIDDLEWARES
+// - check for quantity > 0
+// - check for existing cart
+// - check for existing product
+
 // Write your enpoints here
 
 app.route('/api/carts')
@@ -58,14 +65,15 @@ app.route('/api/carts/:cartId')
 
 app.post('/api/carts/:cartId/products/', async (req, res) => {
   try {
-    const productId = req.body.product_id;
+    const productId: string = req.body.product_id;
     const { quantity } = req.body;
     const { cartId } = req.params;
-    const getProduct = await getProductById(productId);
-    const productQtt = { ...getProduct[0], quantity };
+    const gettingProduct = await getProductById(productId);
     const gettingCart = await getCart(cartId);
-    const cart = await addProductToCart(productQtt, gettingCart);
-    // console.log(cart, 'this is cart in index.ts');
+    const productForCart: ProductForCart = { ...gettingProduct, quantity };
+    // ARRUMAR ADDPRODUCT TO CART
+    const cart = await addProductToCart(productForCart, gettingCart);
+    console.log(cart, 'this is cart in MAIN index.ts');
     if (cart === null) {
       res
         .status(404)

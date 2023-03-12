@@ -4,6 +4,12 @@
    price: number,
  };
 
+ type PostgresProduct = {
+   product_id: string,
+   product_name: string,
+   product_price: number,
+ };
+
 interface ProductForCart extends Product {
   quantity: number
 }
@@ -15,4 +21,6 @@ interface ProductForCart extends Product {
    totalPrice : number
  };
 
-export { Cart, Product, ProductForCart };
+export {
+  Cart, Product, ProductForCart, PostgresProduct,
+};

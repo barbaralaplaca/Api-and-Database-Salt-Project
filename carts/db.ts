@@ -49,9 +49,11 @@ const getCartById = async id => {
 
 const updateCart = async (cart: Cart) => {
   const client = await connection();
-  const data = await client.updateOne({ cart.cartId }, { $set: { cart } });
+  console.log(cart.cartId);
+
+  // const data = await client.updateOne({ cart.cartId }, { $set: { cart } });
   await client.close;
-  return data;
+  return cart;
 };
 
 const deleteCart = async cartId => {

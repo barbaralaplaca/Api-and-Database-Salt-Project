@@ -2,6 +2,7 @@
 
 import { Pool } from 'pg';
 import * as dotenv from 'dotenv';
+import { PostgresProduct } from '../types';
 
 dotenv.config();
 
@@ -26,13 +27,16 @@ const pool = new Pool({
   password: postgresPassword,
 });
 
-const getProduct = async productId => {
+const getProduct = async (productId: string):Promise<PostgresProduct> => {
   const client = await pool.connect();
   const res = await client.query(QUERY, [productId]);
+  if (res.rowCount !== 1) {
+    throw new Error(`More than one product found for ${productId}`);
+  }
   const data = await res.rows;
   client.release();
   pool.end();
-  return data;
+  return data[0];
 };
 
 export default getProduct;
