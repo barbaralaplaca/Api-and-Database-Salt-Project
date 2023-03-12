@@ -13,16 +13,44 @@ app.use(express.json());
 
 // MIDDLEWARES
 // - check for quantity > 0
-// - check for existing cart
-// - check for existing product
+
+const checkCart = async (req: Request, res: Response, next: any) => {
+  const { cartId } = req.params;
+  const cart = await getCart(cartId);
+  if (!cart) {
+    return res
+      .status(404)
+      .send({ message: 'cart does not exist' });
+  } return next();
+};
+
+const checkBody = (req, res, next) => {
+  if (!req.body.productId || !req.body.quantity) {
+    return res
+      .status(400)
+      .send({ message: 'product not found' });
+  } return next();
+};
+
+const checkQuantity = (req, res, next) => {
+  if (req.body.quantity < 1) {
+    return res
+      .status(400)
+      .send({ message: 'add a product' });
+  } return next();
+};
 
 // Write your enpoints here
 
 app.route('/api/carts')
   .get((_req: Request, res: Response) => {
-    res.json({ message: 'You have reached the Cart API' });
+    try {
+      res.json({ message: 'You have reached the Cart API' });
+    } catch (error) {
+      res.status(500).send(error);
+    }
   })
-  .post(async (req, res) => {
+  .post(async (_req, res) => {
     try {
       const cart = await createCart();
       res
@@ -63,27 +91,24 @@ app.route('/api/carts/:cartId')
     }
   });
 
-app.post('/api/carts/:cartId/products/', async (req, res) => {
+app.post('/api/carts/:cartId/products/', checkCart, checkBody, checkQuantity, async (req, res) => {
   try {
-    const productId: string = req.body.product_id;
-    const { quantity } = req.body;
     const { cartId } = req.params;
-    const gettingProduct = await getProductById(productId);
+    const { productId } = req.body;
+    const { quantity } = req.body;
+
     const gettingCart = await getCart(cartId);
+    const gettingProduct = await getProductById(productId);
     const productForCart: ProductForCart = { ...gettingProduct, quantity };
-    // ARRUMAR ADDPRODUCT TO CART
     const cart = await addProductToCart(productForCart, gettingCart);
     console.log(cart, 'this is cart in MAIN index.ts');
-    if (cart === null) {
-      res
-        .status(404)
-        .send({ message: 'cart does not exist' });
-    }
+
     res
+      .set('location', `/api/carts/${cart.cartId}/products`)
       .status(201)
       .json(cart);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send('trying to udnerstand error');
   }
 });
 

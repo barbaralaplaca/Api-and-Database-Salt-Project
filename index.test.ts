@@ -46,7 +46,7 @@ describe('The Cart API', () => {
     });
   });
 
-  describe('GET /api/cart/:cartid', () => {
+  describe('GET /api/carts/:cartid', () => {
     describe('with an existing cart', () => {
       let getResponse = null;
 
@@ -75,7 +75,7 @@ describe('The Cart API', () => {
     });
   });
 
-  describe.only('POST /api/carts/:cartId/products', () => {
+  describe('POST /api/carts/:cartId/products', () => {
     describe('with an existing empty cart', () => {
       let postProductResponse = null;
       let cart = null;
@@ -189,7 +189,7 @@ describe('The Cart API', () => {
     });
   });
 
-  describe('DELETE /api/cart/:cartid', () => {
+  describe('DELETE /api/carts/:cartid', () => {
     describe('an existing cart', () => {
       let deleteResponse = null;
 
