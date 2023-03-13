@@ -12,7 +12,7 @@ const getCart = async (id:string):Promise<Cart> => {
 };
 
 const addProductToCart = async (product:ProductForCart, cart: Cart) => {
-  const productTotalPrice = (product.quantity * product.price);
+  const productTotalPrice = product.quantity * product.price;
   const updatedProductsList = cart.products;
 
   const updatedCart: Cart = {
@@ -28,7 +28,6 @@ const addProductToCart = async (product:ProductForCart, cart: Cart) => {
     const updatedProduct = {
       ...checkProduct,
       quantity: Number(checkProduct.quantity) + Number(product.quantity),
-      price: Number((Number(checkProduct.price) + Number(productTotalPrice)).toFixed(2)),
     };
     updatedProductsList.splice(productInd, 1, updatedProduct);
     const data = await db.updateCart(updatedCart);
