@@ -1,5 +1,7 @@
 # A database-driven Cart API
 
+Project made during bootcamp to practice database skills. Made using Docker, MongoDB and Postgres following the instructions below.
+
 In this exercise, you will create storage for carts in MongoDb and read data from a product database in PostGres SQL. All of the application functionality will be exposed through an API with 4 endpoints.
 
 Here are the endpoints you need to implement:
@@ -50,34 +52,3 @@ When this endpoint is invoked you should:
   * Use the cartId in the request to remove the cart.
   * Apply proper rest principles.
 
-## Get started
-
-* Get and clone this repo.
-* `npm i`
-* In a new terminal window run: `npm run docker:init`
-  * If you want to shut down `npm run docker:close`
-  * If you want to restart the database, but not destroy the data you have created `npm run docker:start`
-* Run tests `npm t` which will `npm run lint` for you
-* Run the API for testing via PostMan or Curl - `npm start`
-
-If you are interested in the docker setup for this test you can read more about that [here](./dockerSetup.md)
-
-## Handing in the solution
-
-Upload the solution files (`index.ts` , the `carts`and `products` folders and all other ts files you are importing (or requiring)) in a folder called `dbCartApi`. Do not upload `node_modules`, `package*.json`, `containerConfig`, tests etc...
-
-## Test and evaluation
-
-We have supplied you with many tests which we will run against your API.
-
-You can use the [instructions here to ensure](https://appliedtechnology.github.io/protips/failOnlyOneTest) that you don't get many failing tests at once.
-
-You are more than welcome to write your own tests - but remember that when you are working with tests that intereact with a database you need to think about cleaning up the data.
-
-As an example, look in the tests.ts how we use a `before` to make sure we create test data when needed and make sure that is `deleted` after the test has completed.
-
-### FAQ
-
-> How do I know how many items are in stock so I dont add too many to the cart? 
-
-The Salt products are made on demand so you can add as many items as you'd like.
